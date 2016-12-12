@@ -69,6 +69,4 @@ public class ParchisBoard {
     String drawBoard() {
         throw new UnsupportedOperationException("Not supported yet.");
     }    
-    
-    //prueba de que se cambia en git
 }
