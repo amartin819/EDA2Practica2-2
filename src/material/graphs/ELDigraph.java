@@ -11,7 +11,7 @@ import java.util.*;
  */
 public class ELDigraph <V,E> implements Digraph <V,E> {
 
-    private final Set <ELVertex<V>> vertexList = new HashSet<>();
+    private final Set <ELDiVertex<V>> vertexList = new HashSet<>();
     private final Set <ELEdge<E,V>> edgeList = new HashSet<>();
     
     
@@ -28,10 +28,9 @@ public class ELDigraph <V,E> implements Digraph <V,E> {
     @Override
     public Collection<? extends Edge<E>> incidentEdges(Vertex<V> v) {
         HashSet <Edge <E> > incidentEdges = new HashSet<>();
-        for (ELEdge <E,V> e : edgeList)
-        {
-            if (e.getStartVertex() == v)
-                incidentEdges.add(e);
+        for (ELEdge <E,V> e : edgeList){
+            /*if (e.getStartVertex() == v)
+                incidentEdges.add(e);*/
             if (e.getEndVertex() == v)
                 incidentEdges.add(e);            
         }
@@ -49,6 +48,10 @@ public class ELDigraph <V,E> implements Digraph <V,E> {
             throw new RuntimeException("The vertex is not in the edge");
         }
 
+    /*NO LO HE TOCADO PERO CREO QUE ESTA BIEN*/
+    /************************************************
+     ************************************************
+     */
     @Override
     public List<Vertex<V>> endVertices(Edge<E> edge) {
         ELEdge<E,V> elv = checkEdge(edge);
@@ -58,12 +61,14 @@ public class ELDigraph <V,E> implements Digraph <V,E> {
         return output;
         }
 
+    /************************CREO QUE ESTABIEN************************/
+    /*RECORRO LA LISTA DE ARISTAS Y MIRO CUAL DE ELLAS TIENE COMO INICIO A START
+     *    Y COMO FINAL A END
+     */
     @Override
-    public boolean areAdjacent(Vertex<V> stat, Vertex<V> end) {
+    public boolean areAdjacent(Vertex<V> start, Vertex<V> end) {
         for (ELEdge edge : edgeList){
-            if ((edge.getStartVertex() == v1) && (edge.getEndVertex() == v2))
-                return true;
-            else if ((edge.getStartVertex() == v2) && (edge.getEndVertex() == v1))
+            if ((edge.getStartVertex() == start) && (edge.getEndVertex() == end))
                 return true;
         }
         return false;
@@ -84,21 +89,30 @@ public class ELDigraph <V,E> implements Digraph <V,E> {
         return aux;
     }
 
-    @Override
+    /*@Override
     public Vertex<V> insertVertex(V value) {
-        ELVertex<V> v = new ELVertex<>(value,this);
+        ELDiVertex<V> v = new ELDiVertex<>(value,this);
         vertexList.add(v);
         return v;
     }
-
+*/
+    @Override
+    public Vertex<V> insertVertex(V value) {
+        ELDiVertex<V> start = new ELDiVertex<>(value,this);
+        //ELDiVertex<V> end = new ELDiVertex<>(value2,this);
+        vertexList.add(start);
+       // vertexList.add(end);
+        return start;
+    }
+    
     @Override
     public Edge<E> insertEdge(Vertex<V> start, Vertex<V> end, E edgeValue) {
-        if (!vertexList.contains(v1))
-            throw new RuntimeException("The vertex v1 doesn't belong to this graph");
-        if (!vertexList.contains(v2))
-            throw new RuntimeException("The vertex v2 doesn't belong to this graph");
+        if (!vertexList.contains(start))
+            throw new RuntimeException("The vertex start doesn't belong to this graph");
+        if (!vertexList.contains(end))
+            throw new RuntimeException("The vertex end doesn't belong to this graph");
 
-        ELEdge<E,V> e = new ELEdge<>(edgeValue,checkVertex(v1),checkVertex(v2),this);
+        ELEdge<E,V> e = new ELEdge<>(edgeValue,checkVertex(start),checkVertex(end),this);
 
         if (edgeList.contains(e))
             edgeList.remove(e);
@@ -106,9 +120,20 @@ public class ELDigraph <V,E> implements Digraph <V,E> {
         return e;
     }
 
+    /***************CREO QUE ESTA BIEN*************/
+    // RECORRO LA LISTA DE ARISITAS Y MIRO CUAL DE ELLAS TIENE
+    // COMO VERTICE INICIAL EL VERTICE QUE ME PASAN
     @Override
     public List<Edge<E>> outputEdges(Vertex<V> v) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ArrayList<Edge<E>> list = new ArrayList<>();
+        ELVertex<V> vert = checkVertex(v);
+        
+        for (ELEdge <E,V> e : edgeList){
+            if(e.getStartVertex()==vert)
+                list.add(e);
+        }
+        
+        return list;        
     }
 
     @Override
@@ -158,7 +183,7 @@ public class ELDigraph <V,E> implements Digraph <V,E> {
         throw new RuntimeException("The vertex is not in the graph");        
     }
      
-    class ELVertex <V> implements Vertex <V> {
+    class ELDiVertex <V> implements Vertex <V> {
     private V vertexValue;
     private final Digraph graph;
     
@@ -171,7 +196,7 @@ public class ELDigraph <V,E> implements Digraph <V,E> {
         vertexValue = value;
     }
     
-    public ELVertex(V value, Graph graph) {
+    public ELDiVertex(V value, Digraph graph) {
         vertexValue = value;
         this.graph = graph;
     }
@@ -179,14 +204,14 @@ public class ELDigraph <V,E> implements Digraph <V,E> {
     /**
      * @return the graph
      */
-    public Graph getGraph() {
+    public Digraph getGraph() {
         return graph;
     }
 }
 
     class ELEdge <E,V> implements Edge <E> {
         private E edgeValue;
-        private final Graph graph;
+        private final Digraph graph;
 
         private final Vertex <V> startVertex;
         private final Vertex <V> endVertex;
@@ -237,7 +262,7 @@ public class ELDigraph <V,E> implements Digraph <V,E> {
             return edgeValue;
         }
 
-        public ELEdge(E value,Vertex<V> startVertex, Vertex<V> endVertex, Graph graph) {
+        public ELEdge(E value,Vertex<V> startVertex, Vertex<V> endVertex, Digraph graph) {
             edgeValue = value;
             this.startVertex = startVertex;
             this.endVertex = endVertex;
@@ -265,7 +290,7 @@ public class ELDigraph <V,E> implements Digraph <V,E> {
         /**
          * @return the graph
          */
-        public Graph getGraph() {
+        public Digraph getGraph() {
             return graph;
         }
 
