@@ -29,8 +29,6 @@ public class ELDigraph <V,E> implements Digraph <V,E> {
     public Collection<? extends Edge<E>> incidentEdges(Vertex<V> v) {
         HashSet <Edge <E> > incidentEdges = new HashSet<>();
         for (ELEdge <E,V> e : edgeList){
-            /*if (e.getStartVertex() == v)
-                incidentEdges.add(e);*/
             if (e.getEndVertex() == v)
                 incidentEdges.add(e);            
         }
@@ -48,10 +46,6 @@ public class ELDigraph <V,E> implements Digraph <V,E> {
             throw new RuntimeException("The vertex is not in the edge");
         }
 
-    /*NO LO HE TOCADO PERO CREO QUE ESTA BIEN*/
-    /************************************************
-     ************************************************
-     */
     @Override
     public List<Vertex<V>> endVertices(Edge<E> edge) {
         ELEdge<E,V> elv = checkEdge(edge);
@@ -126,10 +120,9 @@ public class ELDigraph <V,E> implements Digraph <V,E> {
     @Override
     public List<Edge<E>> outputEdges(Vertex<V> v) {
         ArrayList<Edge<E>> list = new ArrayList<>();
-        ELVertex<V> vert = checkVertex(v);
         
         for (ELEdge <E,V> e : edgeList){
-            if(e.getStartVertex()==vert)
+            if(e.getStartVertex()==v)
                 list.add(e);
         }
         

@@ -22,30 +22,43 @@ public class DeepFirstSearch <V,E> {
     public List <Edge <E>> getPath(Graph <V,E> g, Vertex <V> v1, Vertex <V> v2) {
         if(g.vertices().contains(v1)&& g.vertices().contains(v2)){
             
-            Stack<Edge> pila = new Stack<>();
-            List<Edge<E>> listVisited = new ArrayList<>();
-            Collection listAdj = g.incidentEdges(v1);
-           
-            for(Object elem: listAdj){
-                pila.add((Edge) elem);
-            }
+            Stack<Vertex<V>> pila = new Stack<>();
+            Stack<Edge<E>> edgeVisited = new Stack<>();
+            List<Vertex> vertVisited = new ArrayList<>();
+            Collection listAdj;
+            Vertex<V> vaux;
+            
+            pila.push(v1);
             
             while(!pila.empty()){
-                //ELEdge vaux =checkEdge(pila.pop()) ;
-                Edge vaux = pila.pop();
-                if(vaux!=null /*&& !listVisited.contains(vaux)*/){
-                    listVisited.add(vaux);
-
-                    if(vaux.equals(v2)/*vaux.getEndVertex().equals(v2)*/){
-                        return listVisited;
+                vaux = pila.peek();
+                if(!vertVisited.contains(vaux)){//si no esta visitado el vertice
+                    vertVisited.add(vaux);
+                    
+                    for(Edge<E> e: g.incidentEdges(vaux)){
+                        if(!edgeVisited.contains(e))
+                            edgeVisited.add(e);
+                        break;
+                    }    
+                    
+                    Vertex<V> next = g.opposite(v2, edgeVisited.peek());
+                    
+                    if(!vertVisited.contains(next)){
+                        pila.push(next);
+                        vertVisited.add(next);
+                    }else{
+                        vaux = g.opposite(vaux, e);
+                        if(!pila.contains(vaux) && !vertVisited.contains(vaux)){
+                            pila.push(vaux);
+                        }
                     }
-                    else{
-                        listAdj = g.incidentEdges((Vertex<V>) vaux);
-                        for(Object elem: listAdj)
-                            pila.add((Edge) elem);
-                    }
+                }else{
+                    pila.pop();
                 }
             }
+                
+                
+            
         }
         return null;
     }
