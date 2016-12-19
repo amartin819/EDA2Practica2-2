@@ -22,62 +22,34 @@ public class DeepFirstSearch <V,E> {
     public List <Edge <E>> getPath(Graph <V,E> g, Vertex <V> v1, Vertex <V> v2) {
         if(g.vertices().contains(v1)&& g.vertices().contains(v2)){
             
-            Stack<Vertex<V>> pila = new Stack<>();
-            Stack<Edge<E>> edgeVisited = new Stack<>();
-            List<Vertex> vertVisited = new ArrayList<>();
-            Collection listAdj;
+            Stack<Vertex<V>> pilaVertex = new Stack<>();
+            Stack<Edge<E>> pilaEdge = new Stack<>();
+            List<Vertex<V>> vertVisited = new ArrayList<>();
+            List<Edge<E>> edgeVisited = new ArrayList<>();
+            List<Edge<E>> adjList = new ArrayList<>();
             Vertex<V> vaux;
             
-            pila.push(v1);
+            pilaVertex.push(v1);
+            vertVisited.add(v1);
             
-            while(!pila.empty()){
-                vaux = pila.peek();
-                if(!vertVisited.contains(vaux)){//si no esta visitado el vertice
-                    vertVisited.add(vaux);
-                    
-                    for(Edge<E> e: g.incidentEdges(vaux)){
-                        if(!edgeVisited.contains(e))
-                            edgeVisited.add(e);
-                        break;
-                    }    
-                    
-                    Vertex<V> next = g.opposite(v2, edgeVisited.peek());
-                    
-                    if(!vertVisited.contains(next)){
-                        pila.push(next);
-                        vertVisited.add(next);
+            while(!pilaVertex.isEmpty()){
+                vaux = pilaVertex.peek();
+                adjList.add((Edge<E>) g.incidentEdges(vaux));
+                for(Edge<E> e : adjList){
+                    pilaEdge.push(e);
+                }
+                while(!pilaEdge.isEmpty()){
+                    edgeVisited.add(pilaEdge.peek());
+                    if(v2 == g.opposite(vaux, pilaEdge.pop())){
+                        return edgeVisited;
                     }else{
-                        vaux = g.opposite(vaux, e);
-                        if(!pila.contains(vaux) && !vertVisited.contains(vaux)){
-                            pila.push(vaux);
-                        }
+                        vaux = g.opposite(vaux, pilaEdge.peek());
+
                     }
-                }else{
-                    pila.pop();
                 }
             }
-                
-                
-            
-        }
+        }else
+            throw new RuntimeException("The vertex are not in this graph");
         return null;
-    }
-    
-    private ELEdge<E,V> checkEdge(Edge<E> edge) {
-        if (edge instanceof ELEdge){
-            ELEdge<E, V> e = (ELEdge<E,V>)edge;
-            if (e.getGraph() == this)
-                return e;
-        }
-        throw new RuntimeException("The edge is not in the graph");
-    }
-
-    private ELVertex<V> checkVertex(Vertex<V> vertex) {
-        if (vertex instanceof ELVertex){
-            ELVertex<V> v = (ELVertex<V>)vertex;
-            if (v.getGraph() == this)
-                return v;
-        }
-        throw new RuntimeException("The vertex is not in the graph");        
     }
 }
