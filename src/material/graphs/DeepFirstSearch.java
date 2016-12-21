@@ -20,36 +20,36 @@ public class DeepFirstSearch <V,E> {
      * @return the list of edges from v1 to v2
      */
     public List <Edge <E>> getPath(Graph <V,E> g, Vertex <V> v1, Vertex <V> v2) {
+        List<Edge<E>> edgeVisited = new ArrayList<>();
+        
         if(g.vertices().contains(v1)&& g.vertices().contains(v2)){
-            
-            Stack<Vertex<V>> pilaVertex = new Stack<>();
-            Stack<Edge<E>> pilaEdge = new Stack<>();
-            List<Vertex<V>> vertVisited = new ArrayList<>();
-            List<Edge<E>> edgeVisited = new ArrayList<>();
+            Stack<Vertex<V>> vertexStack = new Stack<>();
+            List<Vertex<V>> vertexVisited = new ArrayList<>();
             List<Edge<E>> adjList = new ArrayList<>();
-            Vertex<V> vaux;
+            Collection col = new ArrayList<>();
             
-            pilaVertex.push(v1);
-            vertVisited.add(v1);
+            Vertex<V> vertex;
             
-            while(!pilaVertex.isEmpty()){
-                vaux = pilaVertex.peek();
-                adjList.add((Edge<E>) g.incidentEdges(vaux));
-                for(Edge<E> e : adjList){
-                    pilaEdge.push(e);
-                }
-                while(!pilaEdge.isEmpty()){
-                    edgeVisited.add(pilaEdge.peek());
-                    if(v2 == g.opposite(vaux, pilaEdge.pop())){
-                        return edgeVisited;
+            vertexStack.push(v1);
+            vertex = vertexStack.peek();
+            
+            while(!vertexStack.isEmpty()){
+                vertexVisited.add(vertex);
+                col = g.incidentEdges(vertex);
+                for(Object e : col){
+                    adjList.add((Edge<E>) e);
+                    if(!vertexVisited.contains(g.opposite(vertex, (Edge<E>) e)) || g.opposite(vertex, (Edge<E>) e)==v2){
+                        vertex = g.opposite(vertex, (Edge<E>) e);
+                        vertexVisited.add(vertex);
+                        vertexStack.push(vertex);
                     }else{
-                        vaux = g.opposite(vaux, pilaEdge.peek());
-
+                        vertexStack.pop();
+                        //break;
                     }
                 }
+                
             }
-        }else
-            throw new RuntimeException("The vertex are not in this graph");
-        return null;
+        }
+        return edgeVisited;
     }
 }

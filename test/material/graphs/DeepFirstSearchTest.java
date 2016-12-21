@@ -73,10 +73,10 @@ public class DeepFirstSearchTest {
         Vertex <String> v3 = graph.insertVertex("C");
         Vertex <String> v4 = graph.insertVertex("D");
 
-        Edge<Integer> e1 = graph.insertEdge(v1, v2, 2);
-        Edge<Integer> e2 = graph.insertEdge(v1, v3, 4);
-        Edge<Integer> e3 = graph.insertEdge(v3, v4, 4);
-        Edge<Integer> e4 = graph.insertEdge(v4, v1, 4);
+        Edge<Integer> e1 = graph.insertEdge(v1, v2, 2);//2
+        Edge<Integer> e2 = graph.insertEdge(v1, v3, 4);//4
+        Edge<Integer> e3 = graph.insertEdge(v3, v4, 4);//4
+        Edge<Integer> e4 = graph.insertEdge(v4, v1, 4);//4
         
         DeepFirstSearch b = new DeepFirstSearch();
         List<Edge> l = b.getPath(graph, v1,v4);
