@@ -83,20 +83,11 @@ public class ELDigraph <V,E> implements Digraph <V,E> {
         return aux;
     }
 
-    /*@Override
+    @Override
     public Vertex<V> insertVertex(V value) {
         ELDiVertex<V> v = new ELDiVertex<>(value,this);
         vertexList.add(v);
         return v;
-    }
-*/
-    @Override
-    public Vertex<V> insertVertex(V value) {
-        ELDiVertex<V> start = new ELDiVertex<>(value,this);
-        //ELDiVertex<V> end = new ELDiVertex<>(value2,this);
-        vertexList.add(start);
-       // vertexList.add(end);
-        return start;
     }
     
     @Override
