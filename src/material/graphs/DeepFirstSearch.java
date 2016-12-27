@@ -38,16 +38,15 @@ public class DeepFirstSearch <V,E> {
                 col = g.incidentEdges(vertex);
                 for(Object e : col){
                     adjList.add((Edge<E>) e);
-                    if(!vertexVisited.contains(g.opposite(vertex, (Edge<E>) e)) || g.opposite(vertex, (Edge<E>) e)==v2){
+                    if(!vertexVisited.contains(g.opposite(vertex, (Edge<E>) e)) || g.opposite(vertex, (Edge<E>) e)!=v2){
                         vertex = g.opposite(vertex, (Edge<E>) e);
                         vertexVisited.add(vertex);
                         vertexStack.push(vertex);
                     }else{
                         vertexStack.pop();
-                        //break;
                     }
                 }
-                
+                vertex = vertexStack.peek();
             }
         }
         return edgeVisited;
